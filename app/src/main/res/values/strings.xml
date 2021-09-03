@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FußballCheckliste</string>
+    <string name="checklist">Checklist</string>
+    <string name="checklistForTraining">Checklist for training</string>
+    <string name="checklistForGame">Checklist for game</string>
+    <string name="seeAll">See all</string>
 </resources>
