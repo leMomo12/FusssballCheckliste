@@ -1,5 +1,6 @@
 package com.mnowo.fuballcheckliste.util
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -10,6 +11,7 @@ import com.mnowo.fuballcheckliste.presentation.HomeScreen.HomeScreen
 import com.mnowo.fuballcheckliste.presentation.HomeScreen.HomeScreenViewModel
 import com.mnowo.fuballcheckliste.presentation.SplashScreen.SplashScreen
 
+@ExperimentalMaterialApi
 @Composable
 fun Navigation(navHostController: NavHostController) {
     NavHost(navController = navHostController, startDestination = Screen.SplashScreen.route) {

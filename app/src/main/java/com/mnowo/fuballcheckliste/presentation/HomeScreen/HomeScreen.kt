@@ -62,13 +62,16 @@ fun HomeScreen(navController: NavController, viewModel: HomeScreenViewModel = hi
         }
     }
 
-    BottomSheetScaffold(sheetPeekHeight = 0.dp, scaffoldState = scaffoldState,
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
         sheetShape = BottomSheetShape,
         sheetContent = {
             currentBottomSheet?.let { currentSheet ->
                 SheetLayout(currentSheet, closeSheet)
             }
-        }) { paddingValues ->
+        },
+        sheetPeekHeight = 56.dp,
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -114,13 +117,12 @@ fun HomeScreenCard(
         modifier = Modifier.fillMaxSize(),
         shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp)
     ) {
-        HomeScreenCardBody(viewModel = viewModel, trainingListData, gameListData, openSheet)
+        HomeScreenCardBody(trainingListData, gameListData, openSheet)
     }
 }
 
 @Composable
 fun HomeScreenCardBody(
-    viewModel: HomeScreenViewModel,
     trainingListData: List<Checkbox>,
     gameListData: List<Checkbox>,
     openSheet: (BottomSheetScreen) -> Unit
@@ -147,20 +149,11 @@ fun TrainingList(
 ) {
     LazyColumn {
         items(trainingListData) {
-            Row(modifier = Modifier.padding(start = 30.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)) {
-                val isChecked = remember { mutableStateOf(false) }
-                Checkbox(
-                    checked = isChecked.value,
-                    onCheckedChange = { isChecked.value = it },
-                    enabled = true,
-
-                    )
-                Spacer(modifier = Modifier.padding(horizontal = 10.dp))
-                Text(text = it.message)
-            }
+            ListItem(text = it.message)
         }
     }
 }
+
 
 @Composable
 fun GameList(
@@ -168,18 +161,23 @@ fun GameList(
 ) {
     LazyColumn {
         items(gameListData) {
-            Row(modifier = Modifier.padding(start = 30.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)) {
-                val isChecked = remember { mutableStateOf(false) }
-                Checkbox(
-                    checked = isChecked.value,
-                    onCheckedChange = { isChecked.value = it },
-                    enabled = true,
-
-                    )
-                Spacer(modifier = Modifier.padding(horizontal = 10.dp))
-                Text(text = it.message)
-            }
+           ListItem(text = it.message)
         }
+    }
+}
+
+@Composable
+fun ListItem(text: String) {
+    Row(modifier = Modifier.padding(start = 30.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)) {
+        val isChecked = remember { mutableStateOf(false) }
+        Checkbox(
+            checked = isChecked.value,
+            onCheckedChange = { isChecked.value = it },
+            enabled = true,
+
+            )
+        Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+        Text(text = text)
     }
 }
 
@@ -202,7 +200,13 @@ fun ChecklistChipRow(text: String, openSheet: (BottomSheetScreen) -> Unit) {
                 .width(90.dp)
                 .clip(RoundedCornerShape(30.dp))
                 .background(chipColor)
-                .clickable { openSheet(BottomSheetScreen.FullTrainingScreen) },
+                .clickable {
+                    if (text == "Checklist for training") {
+                        openSheet(BottomSheetScreen.FullTrainingScreen)
+                    } else {
+                        openSheet(BottomSheetScreen.FullGameScreen)
+                    }
+                },
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -229,7 +233,7 @@ fun BottomSheetWithCloseDialog(
     onClosePressed: () -> Unit,
     modifier: Modifier = Modifier,
     closeButtonColor: Color = Color.Gray,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     Box(modifier.fillMaxWidth()) {
         content()
